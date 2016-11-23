@@ -2,7 +2,7 @@ module Main exposing (..)
 
 import Html exposing (..)
 import Html.Events exposing (..)
-import Time exposing (Time, second)
+import Time exposing (..)
 
 
 main =
@@ -43,6 +43,7 @@ type Msg
     = Start
     | Stop
     | Reset
+    | Tick Time
 
 
 update msg model =
@@ -54,11 +55,27 @@ update msg model =
             { model | running = False }
 
         Reset ->
-            { model | running = False }
+            { model | running = False, remaining = 30 }
+
+        Tick newTime ->
+                { model | remaining = 100 }
 
 
 
 -- SUBSCRIPTIONS
+
+
+subscriptions : Model -> Sub Msg
+subscriptions model =
+    case model.running of
+        True ->
+            Time.every second Tick
+
+        False ->
+            Sub.none
+
+
+
 -- VIEW
 
 
